@@ -20,6 +20,6 @@ artisan-key-generate:
 artisan-migrate-seed:
 	docker-compose exec app php artisan migrate --seed
 artisan-storage-link:
-	([ -L "public/storage" ] && rm -r public/storage) && ([ -d "storage/app/public" ] || mkdir storage/app/public) && docker-compose exec app php artisan storage:link
+	docker-compose exec app php artisan storage:link
 bash:
 	docker-compose exec app bash
