@@ -8,14 +8,12 @@ services:
         uid: 1000
       context: .
       dockerfile: docker/app.dockerfile
-    image: laravel-app
     container_name: laravel-app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
     depends_on:
       - db
-      - redisinsight
     volumes:
       - .:/var/www/html:delegated
       - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -52,16 +50,24 @@ services:
     networks:
       - laravel-net
 
-#  queue:
-#    image: rabbitmq:3-management-alpine
-#    container_name: laravel-queue
-#    healthcheck:
-#      test: rabbitmq-diagnostics -q ping
-#    ports:
-#      - '5672:5672'
-#      - '15672:15672'
-#    networks:
-#      - laravel-net
+  #  rabbitmq:
+  #    image: rabbitmq:3.10.7-management
+  #    container_name: laravel-queue
+  #    hostname: rabbitmq
+  #    restart: always
+  #    environment:
+  #      - RABBITMQ_DEFAULT_USER=rmuser
+  #      - RABBITMQ_DEFAULT_PASS=rmpassword
+  #      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
+  #    volumes:
+  #      - ./rabbitmq:/var/lib/rabbitmq
+  #    healthcheck:
+  #      test: rabbitmq-diagnostics -q ping
+  #    ports:
+  #      - '${FORWARD_RABBITMQ_DASHBOARD_PORT:-15672}:15672' # web ui
+  #      - '${FORWARD_RABBITMQ_AMQP_PORT:-5672}:5672' # AMQP
+  #    networks:
+  #      - laravel-net
 
   redis:
     image: redis:7.0-rc2
@@ -79,7 +85,18 @@ services:
     depends_on:
       - redis
     ports:
-      - '8001:8001'
+      - '${FORWARD_REDISINSIGHT_PORT:-8001}:8001'
+    networks:
+      - laravel-net
+
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: laravel-mailhog
+    restart: unless-stopped
+    ports:
+      - '${FORWARD_MAILHOG_PORT:-1025}:1025' # smtp server
+      - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025' # web ui
     networks:
       - laravel-net
 
