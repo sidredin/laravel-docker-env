@@ -50,6 +50,23 @@ services:
     networks:
       - laravel-net
 
+  #  uncomment phpmyadmin service only on local environment
+  #  phpmyadmin:
+  #    image: phpmyadmin/phpmyadmin:latest
+  #    container_name: wallet-phpmyadmin
+  #    restart: unless-stopped
+  #    ports:
+  #      - "${FORWARD_PMA_PORT:-48181}:80"
+  #    environment:
+  #      - PMA_HOST=${DB_HOST}
+  #      - PMA_USER=${DB_USERNAME}
+  #      - PMA_PASSWORD=${DB_PASSWORD}
+  #      - UPLOAD_LIMIT=400M
+  #    depends_on:
+  #      - db
+  #    networks:
+  #      - wallet-net
+
   #  rabbitmq:
   #    image: rabbitmq:3.10.7-management
   #    container_name: laravel-queue
@@ -69,25 +86,25 @@ services:
   #    networks:
   #      - laravel-net
 
-  redis:
-    image: redis:7.0-rc2
-    container_name: laravel-redis
-    volumes:
-      - 'laravel-redis:/data'
-    ports:
-      - '${FORWARD_REDIS_PORT:-6379}:6379'
-    networks:
-      - laravel-net
+  #  redis:
+  #    image: redis:7.0-rc2
+  #    container_name: laravel-redis
+  #    volumes:
+  #      - 'laravel-redis:/data'
+  #    ports:
+  #      - '${FORWARD_REDIS_PORT:-6379}:6379'
+  #    networks:
+  #      - laravel-net
 
-  redisinsight:
-    image: redislabs/redisinsight:1.11.1
-    container_name: laravel-redisinsight
-    depends_on:
-      - redis
-    ports:
-      - '${FORWARD_REDISINSIGHT_PORT:-8001}:8001'
-    networks:
-      - laravel-net
+  #  redisinsight:
+  #    image: redislabs/redisinsight:1.11.1
+  #    container_name: laravel-redisinsight
+  #    depends_on:
+  #      - redis
+  #    ports:
+  #      - '${FORWARD_REDISINSIGHT_PORT:-8001}:8001'
+  #    networks:
+  #      - laravel-net
 
 
   mailhog:
@@ -107,5 +124,5 @@ networks:
 volumes:
   laravel-mysql:
     driver: local
-  laravel-redis:
-    driver: local
+#  laravel-redis:
+#    driver: local

@@ -17,3 +17,14 @@ yarn-error.log
 /.idea
 /.vscode
 /rabbitmq
+
+worker.log
+
+/storage/venv
+draft.yaml
+.blueprint
+docker-compose.yml
+docker-compose.override.yml
+laravel-echo-server.json
+laravel-echo-server.lock
+
